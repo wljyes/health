@@ -1,15 +1,29 @@
-package com.example.health.pojo;
+package com.example.health.entity;
 
+import lombok.NoArgsConstructor;
 
-public class User {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
+@Entity
+@NoArgsConstructor
+public class Doctor {
+
+  @Id
+  @GeneratedValue
   private Integer id;
   private String name;
   private Integer age;
   private String sex;
   private String tel;
+  private String profile;
   private Integer accountId;
+  private Integer departmentId;
 
+  public Doctor(Integer accountId) {
+    this.accountId = accountId;
+  }
 
   public Integer getId() {
     return id;
@@ -56,12 +70,30 @@ public class User {
   }
 
 
+  public String getProfile() {
+    return profile;
+  }
+
+  public void setProfile(String profile) {
+    this.profile = profile;
+  }
+
+
   public Integer getAccountId() {
     return accountId;
   }
 
   public void setAccountId(Integer accountId) {
     this.accountId = accountId;
+  }
+
+
+  public Integer getDepartmentId() {
+    return departmentId;
+  }
+
+  public void setDepartmentId(Integer departmentId) {
+    this.departmentId = departmentId;
   }
 
 }

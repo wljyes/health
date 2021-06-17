@@ -1,8 +1,14 @@
-package com.example.health.pojo;
+package com.example.health.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
+@Entity
 public class Report {
 
+  @Id
+  @GeneratedValue
   private Integer id;
   private java.sql.Timestamp date;
   private String doctorName;

@@ -1,9 +1,16 @@
-package com.example.health.pojo;
+package com.example.health.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
+@Entity
 public class Department {
 
+  @Id
+  @GeneratedValue
   private Integer id;
+
   private String name;
   private Integer limitPerPeriod;
 

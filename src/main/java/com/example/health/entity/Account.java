@@ -1,9 +1,21 @@
-package com.example.health.pojo;
+package com.example.health.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "account")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Account {
 
+  @Id
+  @GeneratedValue
   private Integer id;
+
+  @Column(length = 20)
   private String username;
   private String passwordHash;
   private String salt;
