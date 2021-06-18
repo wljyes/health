@@ -6,6 +6,7 @@ import com.example.health.data.AccountBean;
 import com.example.health.entity.Account;
 import com.example.health.entity.Doctor;
 import com.example.health.entity.User;
+import com.example.health.exception.AccountException;
 import com.example.health.repository.AccountRepository;
 import com.example.health.repository.DoctorRepository;
 import com.example.health.repository.UserRepository;
@@ -29,10 +30,10 @@ public class AccountService {
     @Autowired
     DoctorRepository doctorRepository;
 
-    public ApiResult<String> signUp(AccountBean accountBean) {
+    public void signUp(AccountBean accountBean) {
         if (accountRepository.findByUsernameAndRole(
                 accountBean.getUsername(), accountBean.getRole()) != null) {
-            return ApiResult.fail("用户已存在!");
+            throw new AccountException("用户名已存在!");
         }
 
         Role role = Role.of(accountBean.getRole());
@@ -50,54 +51,26 @@ public class AccountService {
                 doctorRepository.save(new Doctor(account.getId()));
                 break;
         }
-
-        return ApiResult.success();
     }
 
-    public ApiResult<String> signIn(AccountBean accountBean, HttpSession session) {
-        Account account = accountRepository.findByUsernameAndRole(
-                accountBean.getUsername(), accountBean.getRole());
+    public User userSignIn(AccountBean accountBean) {
+        Account account = accountSignIn(accountBean);
 
-        if (account == null) {
-            return ApiResult.fail("用户不存在!");
-        }
-        if (validatePassword(accountBean.getPassword(), account.getSalt(),
-                account.getPasswordHash())) {
-            return ApiResult.fail("密码错误!");
-        }
-
-        switch (Role.of(accountBean.getRole())) {
-            case User:
-                User user = userRepository.findByAccountId(account.getId());
-                session.setAttribute("user", user);
-                session.setAttribute("role", Role.User.getCode());
-                break;
-            case Doctor:
-                Doctor doctor = doctorRepository.findByAccountId(account.getId());
-                session.setAttribute("doctor", doctor);
-                session.setAttribute("role", Role.Doctor.getCode());
-                break;
-        }
-        return ApiResult.success();
+        return userRepository.findByAccountId(account.getId());
     }
 
-    public ApiResult<String> changePassword(AccountBean accountBean, HttpSession session) {
-        Role role = Role.of((Integer) session.getAttribute("role"));
-        Account account = null;
-        switch (role) {
-            case User:
-                User user = (User) session.getAttribute("user");
-                account = accountRepository.findById(user.getAccountId()).get();
-                break;
-            case Doctor:
-                Doctor doctor = (Doctor) session.getAttribute("doctor");
-                account = accountRepository.findById(doctor.getAccountId()).get();
-                break;
-        }
+    public Doctor doctorSignIn(AccountBean accountBean) {
+        Account account = accountSignIn(accountBean);
+
+        return doctorRepository.findByAccountId(account.getId());
+    }
+
+    public void changePassword(AccountBean accountBean, int currentAccountId) {
+        Account account = accountRepository.findById(currentAccountId).orElseThrow();
 
         if (!validatePassword(accountBean.getPassword(), account.getSalt(),
                 account.getPasswordHash())) {
-            return ApiResult.fail("密码不一致!");
+            throw new AccountException("密码不一致!");
         }
 
         String newSalt = generateSalt();
@@ -105,8 +78,21 @@ public class AccountService {
         account.setPasswordHash(newPasswordHash);
         account.setSalt(newSalt);
         accountRepository.save(account);
+    }
 
-        return ApiResult.success();
+
+    private Account accountSignIn(AccountBean accountBean) {
+        Account account = accountRepository.findByUsernameAndRole(
+                accountBean.getUsername(), accountBean.getRole());
+
+        if (account == null) {
+            throw new AccountException("用户不存在!");
+        }
+        if (validatePassword(accountBean.getPassword(), account.getSalt(),
+                account.getPasswordHash())) {
+            throw new AccountException("密码错误!");
+        }
+        return account;
     }
 
     private boolean validatePassword(String password, String salt, String passwordHash) {
