@@ -2,7 +2,7 @@ package com.example.health.data;
 
 public class ApiResult<T> {
     int code = 200;
-    String msg = "success!";
+    String msg = "OK";
     T data;
 
     public ApiResult() {

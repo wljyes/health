@@ -41,7 +41,7 @@ public class AccountService {
         String passwordHash = hashPassword(accountBean.getPassword(), salt);
         Account account = new Account(null, accountBean.getUsername(),
                 passwordHash, salt, role.getCode());
-        accountRepository.save(account);
+        account = accountRepository.save(account);
 
         switch (role) {
             case User:
@@ -81,7 +81,7 @@ public class AccountService {
     }
 
 
-    private Account accountSignIn(AccountBean accountBean) {
+    public Account accountSignIn(AccountBean accountBean) {
         Account account = accountRepository.findByUsernameAndRole(
                 accountBean.getUsername(), accountBean.getRole());
 

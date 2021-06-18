@@ -1,5 +1,7 @@
 package com.example.health.data;
 
+import com.example.health.exception.NoSuchRoleException;
+
 public enum Role {
     User(1), Doctor(2);
 
@@ -20,7 +22,7 @@ public enum Role {
             case 2:
                 return Doctor;
             default:
-                throw new RuntimeException("未知的Role code : " + code);
+                throw new NoSuchRoleException("未知的Role code : " + code);
         }
     }
 }

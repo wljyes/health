@@ -1,8 +1,11 @@
 package com.example.health.service;
 
+import com.example.health.data.AccountBean;
 import com.example.health.data.ApiResult;
 import com.example.health.data.UserBean;
+import com.example.health.entity.Account;
 import com.example.health.entity.User;
+import com.example.health.exception.UserNotFoundException;
 import com.example.health.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,32 +20,16 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public ApiResult<String> update(UserBean userBean, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        user.setName(userBean.getName());
-        user.setAge(userBean.getAge());
-        user.setSex(userBean.getSex());
-        user.setTel(userBean.getTel());
-        userRepository.save(user);
-
-        return ApiResult.success();
+    public void update(UserBean userBean, User currentUser) {
+        currentUser.setName(userBean.getName());
+        currentUser.setAge(userBean.getAge());
+        currentUser.setSex(userBean.getSex());
+        currentUser.setTel(userBean.getTel());
+        userRepository.save(currentUser);
     }
 
-    public ApiResult<User> getCurrentUser(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            return ApiResult.fail();
-        } else {
-            return ApiResult.success(user);
-        }
-    }
-
-    public ApiResult<User> getUserById(int id) {
+    public User getUserById(int id) {
         Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            return ApiResult.success(user.get());
-        } else {
-            return ApiResult.fail();
-        }
+        return user.orElseThrow(UserNotFoundException::new);
     }
 }

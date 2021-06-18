@@ -7,18 +7,14 @@ import com.example.health.data.group.BasicAccountInfo;
 import com.example.health.data.group.ChangePasswordInfo;
 import com.example.health.entity.Doctor;
 import com.example.health.entity.User;
-import com.example.health.repository.AccountRepository;
+import com.example.health.exception.AccountException;
+import com.example.health.exception.UnAuthException;
 import com.example.health.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.print.Doc;
 import javax.servlet.http.HttpSession;
 
 @RestController
@@ -55,6 +51,10 @@ public class AccountController {
     @PostMapping(path = "changePassword")
     ApiResult<String> changePassword(@Validated(ChangePasswordInfo.class) AccountBean accountBean,
                                      HttpSession session) {
+        if (session.getAttribute("role") == null) {
+            throw new UnAuthException("Need login");
+        }
+
         Integer accountId = null;
         Role role = Role.of((Integer) session.getAttribute("role"));
         switch (role) {
@@ -67,6 +67,20 @@ public class AccountController {
         }
         accountService.changePassword(accountBean, accountId);
         return ApiResult.success();
+    }
+
+    @ExceptionHandler(UnAuthException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    ApiResult<String> handleUnAuthError(Exception ex) {
+        return ApiResult.fail(ex.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(AccountException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    ApiResult<String> handleError(Exception ex) {
+        return ApiResult.fail(ex.getLocalizedMessage());
     }
 
 }
