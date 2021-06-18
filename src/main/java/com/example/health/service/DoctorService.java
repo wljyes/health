@@ -1,6 +1,7 @@
 package com.example.health.service;
 
 import com.example.health.data.DoctorBean;
+import com.example.health.entity.Account;
 import com.example.health.entity.Doctor;
 import com.example.health.exception.DoctorNotFoundException;
 import com.example.health.repository.DoctorRepository;
@@ -14,6 +15,17 @@ public class DoctorService {
 
     @Autowired
     private DoctorRepository doctorRepository;
+
+    public void signUp(DoctorBean doctorBean, Account account) {
+        Doctor doctor = new Doctor();
+        doctorBean.fillDoctor(doctor);
+        doctor.setAccountId(account.getId());
+        doctorRepository.save(doctor);
+    }
+
+    public Doctor getDoctorByAccountId(int id) {
+        return doctorRepository.findByAccountId(id);
+    }
 
     public List<Doctor> getAllDoctorsByDepartmentId(int departmentId) {
         return doctorRepository.findAllByDepartmentId(departmentId);

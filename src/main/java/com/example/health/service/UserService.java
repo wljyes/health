@@ -20,11 +20,19 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    public void signUp(UserBean userBean, Account account) {
+        User user = new User();
+        userBean.fillUser(user);
+        user.setAccountId(account.getId());
+        userRepository.save(user);
+    }
+
+    public User getUserByAccountId(int id) {
+        return userRepository.findByAccountId(id);
+    }
+
     public void update(UserBean userBean, User currentUser) {
-        currentUser.setName(userBean.getName());
-        currentUser.setAge(userBean.getAge());
-        currentUser.setSex(userBean.getSex());
-        currentUser.setTel(userBean.getTel());
+        userBean.fillUser(currentUser);
         userRepository.save(currentUser);
     }
 

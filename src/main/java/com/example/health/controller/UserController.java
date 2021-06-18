@@ -2,7 +2,9 @@ package com.example.health.controller;
 
 import com.example.health.data.AccountBean;
 import com.example.health.data.ApiResult;
+import com.example.health.data.Role;
 import com.example.health.data.UserBean;
+import com.example.health.data.group.AdvanceProfileInfo;
 import com.example.health.data.group.BasicAccountInfo;
 import com.example.health.entity.Account;
 import com.example.health.entity.User;
@@ -23,6 +25,37 @@ public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    AccountService accountService;
+
+    @PostMapping(path = "signUp")
+    public ApiResult<String> signUp(@Validated(BasicAccountInfo.class) UserBean userBean) {
+        AccountBean accountBean = new AccountBean();
+        accountBean.setUsername(userBean.getUsername());
+        accountBean.setPassword(userBean.getPassword());
+        accountBean.setRole(Role.User.getCode());
+
+        Account account = accountService.signUp(accountBean);
+        userService.signUp(userBean, account);
+        return ApiResult.success();
+    }
+
+    @PostMapping(path = "signIn")
+    public ApiResult<User> signIn(@Validated(BasicAccountInfo.class) UserBean userBean,
+                HttpSession session) {
+        AccountBean accountBean = new AccountBean();
+        accountBean.setUsername(userBean.getUsername());
+        accountBean.setPassword(userBean.getPassword());
+        accountBean.setRole(Role.User.getCode());
+
+        Account account = accountService.accountSignIn(accountBean);
+        User user = userService.getUserByAccountId(account.getId());
+
+        session.setAttribute("role", Role.User.getCode());
+        session.setAttribute("user", user);
+
+        return ApiResult.success(user);
+    }
 
     @GetMapping(path = "getCurrentUser")
     public ApiResult<User> getCurrentUser(@SessionAttribute(value = "user") User currentUser) {
@@ -36,7 +69,7 @@ public class UserController {
     }
 
     @PostMapping(path = "update")
-    public ApiResult<User> updateUser(@Validated UserBean userBean,
+    public ApiResult<User> updateUser(@Validated(AdvanceProfileInfo.class) UserBean userBean,
                                         @SessionAttribute("user") User user) {
         userService.update(userBean, user);
         return ApiResult.success(user);

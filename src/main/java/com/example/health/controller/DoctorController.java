@@ -1,13 +1,18 @@
 package com.example.health.controller;
 
-import com.example.health.data.ApiResult;
-import com.example.health.data.DoctorBean;
+import com.example.health.data.*;
+import com.example.health.data.group.AdvanceProfileInfo;
+import com.example.health.data.group.BasicAccountInfo;
+import com.example.health.entity.Account;
 import com.example.health.entity.Doctor;
+import com.example.health.entity.User;
+import com.example.health.service.AccountService;
 import com.example.health.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -15,6 +20,37 @@ public class DoctorController {
 
     @Autowired
     DoctorService doctorService;
+    @Autowired
+    AccountService accountService;
+
+    @PostMapping(path = "signUp")
+    public ApiResult<String> signUp(@Validated(BasicAccountInfo.class) DoctorBean doctorBean) {
+        AccountBean accountBean = new AccountBean();
+        accountBean.setUsername(doctorBean.getUsername());
+        accountBean.setPassword(doctorBean.getPassword());
+        accountBean.setRole(Role.Doctor.getCode());
+
+        Account account = accountService.signUp(accountBean);
+        doctorService.signUp(doctorBean, account);
+        return ApiResult.success();
+    }
+
+    @PostMapping(path = "signIn")
+    public ApiResult<Doctor> signIn(@Validated(BasicAccountInfo.class) DoctorBean doctorBean,
+                                    HttpSession session) {
+        AccountBean accountBean = new AccountBean();
+        accountBean.setUsername(doctorBean.getUsername());
+        accountBean.setPassword(doctorBean.getPassword());
+        accountBean.setRole(Role.Doctor.getCode());
+
+        Account account = accountService.accountSignIn(accountBean);
+        Doctor doctor = doctorService.getDoctorByAccountId(account.getId());
+
+        session.setAttribute("role", Role.Doctor.getCode());
+        session.setAttribute("doctor", doctor);
+
+        return ApiResult.success(doctor);
+    }
 
     @GetMapping(path = "doctor/getCurrentDoctor")
     public ApiResult<Doctor> getCurrentDoctor(
@@ -35,7 +71,7 @@ public class DoctorController {
     }
 
     @PostMapping(path = "update")
-    public ApiResult<Doctor> updateDoctor(@Validated DoctorBean doctorBean,
+    public ApiResult<Doctor> updateDoctor(@Validated(AdvanceProfileInfo.class) DoctorBean doctorBean,
                                           @SessionAttribute("doctor") Doctor doctor) {
         doctorService.update(doctorBean, doctor);
         return ApiResult.success(doctor);

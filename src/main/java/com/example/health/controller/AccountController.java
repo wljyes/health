@@ -24,29 +24,29 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @PostMapping(path = "signIn")
-    ApiResult<String> signIn(@Validated(BasicAccountInfo.class) AccountBean accountBean,
-            HttpSession session) {
-        Role role = Role.of(accountBean.getRole());
-        switch (role) {
-            case User:
-                User user = accountService.userSignIn(accountBean);
-                session.setAttribute("user", user);
-                break;
-            case Doctor:
-                Doctor doctor = accountService.doctorSignIn(accountBean);
-                session.setAttribute("doctor", doctor);
-                break;
-        }
-        session.setAttribute("role", accountBean.getRole());
-        return ApiResult.success();
-    }
+//    @PostMapping(path = "signIn")
+//    ApiResult<String> signIn(@Validated(BasicAccountInfo.class) AccountBean accountBean,
+//            HttpSession session) {
+//        Role role = Role.of(accountBean.getRole());
+//        switch (role) {
+//            case User:
+//                User user = accountService.userSignIn(accountBean);
+//                session.setAttribute("user", user);
+//                break;
+//            case Doctor:
+//                Doctor doctor = accountService.doctorSignIn(accountBean);
+//                session.setAttribute("doctor", doctor);
+//                break;
+//        }
+//        session.setAttribute("role", accountBean.getRole());
+//        return ApiResult.success();
+//    }
 
-    @PostMapping(path = "signUp")
-    ApiResult<String> signUp(@Validated(BasicAccountInfo.class) AccountBean accountBean) {
-        accountService.signUp(accountBean);
-        return ApiResult.success();
-    }
+//    @PostMapping(path = "signUp")
+//    ApiResult<String> signUp(@Validated(BasicAccountInfo.class) AccountBean accountBean) {
+//        accountService.signUp(accountBean);
+//        return ApiResult.success();
+//    }
 
     @PostMapping(path = "changePassword")
     ApiResult<String> changePassword(@Validated(ChangePasswordInfo.class) AccountBean accountBean,
@@ -69,18 +69,18 @@ public class AccountController {
         return ApiResult.success();
     }
 
-    @ExceptionHandler(UnAuthException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ResponseBody
-    ApiResult<String> handleUnAuthError(Exception ex) {
-        return ApiResult.fail(ex.getLocalizedMessage());
-    }
-
-    @ExceptionHandler(AccountException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    ApiResult<String> handleError(Exception ex) {
-        return ApiResult.fail(ex.getLocalizedMessage());
-    }
+//    @ExceptionHandler(UnAuthException.class)
+//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+//    @ResponseBody
+//    ApiResult<String> handleUnAuthError(Exception ex) {
+//        return ApiResult.fail(ex.getLocalizedMessage());
+//    }
+//
+//    @ExceptionHandler(AccountException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ResponseBody
+//    ApiResult<String> handleError(Exception ex) {
+//        return ApiResult.fail(ex.getLocalizedMessage());
+//    }
 
 }

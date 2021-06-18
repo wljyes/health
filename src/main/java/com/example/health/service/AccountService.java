@@ -3,6 +3,7 @@ package com.example.health.service;
 import com.example.health.data.ApiResult;
 import com.example.health.data.Role;
 import com.example.health.data.AccountBean;
+import com.example.health.data.UserBean;
 import com.example.health.entity.Account;
 import com.example.health.entity.Doctor;
 import com.example.health.entity.User;
@@ -30,7 +31,7 @@ public class AccountService {
     @Autowired
     DoctorRepository doctorRepository;
 
-    public void signUp(AccountBean accountBean) {
+    public Account signUp(AccountBean accountBean) {
         if (accountRepository.findByUsernameAndRole(
                 accountBean.getUsername(), accountBean.getRole()) != null) {
             throw new AccountException("用户名已存在!");
@@ -43,27 +44,14 @@ public class AccountService {
                 passwordHash, salt, role.getCode());
         account = accountRepository.save(account);
 
-        switch (role) {
-            case User:
-                userRepository.save(new User(account.getUsername(), account.getId()));
-                break;
-            case Doctor:
-                doctorRepository.save(new Doctor(account.getId()));
-                break;
-        }
+        return account;
     }
 
-    public User userSignIn(AccountBean accountBean) {
-        Account account = accountSignIn(accountBean);
-
-        return userRepository.findByAccountId(account.getId());
-    }
-
-    public Doctor doctorSignIn(AccountBean accountBean) {
-        Account account = accountSignIn(accountBean);
-
-        return doctorRepository.findByAccountId(account.getId());
-    }
+//    public Doctor doctorSignIn(AccountBean accountBean) {
+//        Account account = accountSignIn(accountBean);
+//
+//        return doctorRepository.findByAccountId(account.getId());
+//    }
 
     public void changePassword(AccountBean accountBean, int currentAccountId) {
         Account account = accountRepository.findById(currentAccountId).orElseThrow();
