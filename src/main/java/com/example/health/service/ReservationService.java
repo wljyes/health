@@ -92,11 +92,9 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
-    public void doneReservation(int rId, int userId) {
+    public void doneReservation(int rId) {
         Reservation reservation = reservationRepository.getById(rId);
-        if (reservation.getUserId() != userId) {
-            throw new IllegalReservationException();
-        }
+
         if (reservation.getStatus() == ReservationStatus.Canceled.getStatusCode()) {
             throw new IllegalReservationException();
         }

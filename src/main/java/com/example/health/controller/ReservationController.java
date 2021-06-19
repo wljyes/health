@@ -84,7 +84,8 @@ public class ReservationController {
     @PutMapping(path = "reservation/{id}/done")
     public ApiResult<String> done(@PathVariable("id") int reservationId,
                                   @SessionAttribute("user") User user) {
-        reservationService.doneReservation(reservationId, user.getId());
+
+        reservationService.doneReservation(reservationId);
         return ApiResult.success();
     }
 
