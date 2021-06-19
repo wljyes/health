@@ -1,11 +1,11 @@
 package com.example.health.controller;
 
 import com.example.health.data.*;
+import com.example.health.data.enums.Role;
 import com.example.health.data.group.AdvanceProfileInfo;
 import com.example.health.data.group.BasicAccountInfo;
 import com.example.health.entity.Account;
 import com.example.health.entity.Doctor;
-import com.example.health.entity.User;
 import com.example.health.service.AccountService;
 import com.example.health.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;

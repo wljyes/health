@@ -1,12 +1,8 @@
 package com.example.health.service;
 
-import com.example.health.data.ApiResult;
-import com.example.health.data.Role;
+import com.example.health.data.enums.Role;
 import com.example.health.data.AccountBean;
-import com.example.health.data.UserBean;
 import com.example.health.entity.Account;
-import com.example.health.entity.Doctor;
-import com.example.health.entity.User;
 import com.example.health.exception.AccountException;
 import com.example.health.repository.AccountRepository;
 import com.example.health.repository.DoctorRepository;
@@ -15,8 +11,6 @@ import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpSession;
 
 @Service
 public class AccountService {

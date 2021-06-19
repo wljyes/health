@@ -1,4 +1,4 @@
-package com.example.health.data;
+package com.example.health.data.enums;
 
 import com.example.health.exception.NoSuchRoleException;
 

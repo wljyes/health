@@ -2,7 +2,7 @@ package com.example.health.controller;
 
 import com.example.health.data.AccountBean;
 import com.example.health.data.ApiResult;
-import com.example.health.data.Role;
+import com.example.health.data.enums.Role;
 import com.example.health.data.UserBean;
 import com.example.health.data.group.AdvanceProfileInfo;
 import com.example.health.data.group.BasicAccountInfo;
@@ -11,13 +11,10 @@ import com.example.health.entity.User;
 import com.example.health.service.AccountService;
 import com.example.health.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.Objects;
 
 @RestController
 @RequestMapping(path = "user")
