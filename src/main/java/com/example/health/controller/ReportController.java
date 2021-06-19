@@ -36,7 +36,7 @@ public class ReportController {
         return ApiResult.success(reports);
     }
 
-    @PostMapping(path = "reservation/{rId}/report")
+    @PostMapping(path = "reservations/{rId}/report")
     public ApiResult<Report> addReport(@PathVariable("rId") int reservationId,
                                        @Validated ReportBean reportBean,
                                        @SessionAttribute("doctor") Doctor doctor) {

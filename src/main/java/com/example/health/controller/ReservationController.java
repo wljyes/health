@@ -28,33 +28,33 @@ public class ReservationController {
     @Autowired
     DepartmentRepository departmentRepository;
 
-    @GetMapping(path = "department/{id}/reservation")
+    @GetMapping(path = "departments/{id}/reservation")
     public ApiResult<List<Reservation>> getAllReservationOfDepartment(@PathVariable("id") int id) {
         List<Reservation> reservations = reservationService.getAllByDepartmentId(id);
         return ApiResult.success(reservations);
     }
 
-    @GetMapping(path = "department/{id}/reservation/{status}")
+    @GetMapping(path = "departments/{id}/reservation/{status}")
     public ApiResult<List<Reservation>> getAllReservationOfDepartment(@PathVariable("id") int id,
                                                                       @PathVariable("status") int status) {
         List<Reservation> reservations = reservationService.getAllByDepartmentIdAndStatus(id, status);
         return ApiResult.success(reservations);
     }
 
-    @GetMapping(path = "user/reservation")
+    @GetMapping(path = "user/reservations")
     public ApiResult<List<Reservation>> getAllReservationOfUser(@SessionAttribute("user") User user) {
         List<Reservation> reservations = reservationService.getAllReservationByUserId(user.getId());
         return ApiResult.success(reservations);
     }
 
-    @GetMapping(path = "user/reservation/{status}")
+    @GetMapping(path = "user/reservations/{status}")
     public ApiResult<List<Reservation>> getAllReservationOfUser(@SessionAttribute("user") User user,
                                                                 @PathVariable("status") int status) {
         List<Reservation> reservations = reservationService.getAllByUserIdAndStatus(user.getId(), status);
         return ApiResult.success(reservations);
     }
 
-    @PostMapping(path = "reservation/create")
+    @PostMapping(path = "reservations/create")
     public ApiResult<Reservation> create(@Validated ReservationBean reservationBean,
                                          @SessionAttribute("user") User user) {
         Department department = departmentRepository.getById(reservationBean.getDepartmentId());
@@ -66,27 +66,18 @@ public class ReservationController {
         return ApiResult.success(reservation);
     }
 
-    @PutMapping(path = "reservation/{id}/cancel")
+    @PutMapping(path = "reservations/{id}/cancel")
     public ApiResult<String> cancel(@PathVariable("id") int reservationId, @SessionAttribute("user") User user) {
         reservationService.cancelReservation(reservationId, user.getId());
         return ApiResult.success();
     }
 
-    @PostMapping(path = "reservation/{id}/change")
+    @PostMapping(path = "reservations/{id}/change")
     public ApiResult<Reservation> change(@PathVariable("id") int reservationId,
                                          @Validated ReservationBean reservationBean,
                                          @SessionAttribute("user") User user) {
         Reservation reservation = reservationService.changeReservation(reservationId, reservationBean, user.getId());
         return ApiResult.success(reservation);
-    }
-
-    //TODO:医生来完成
-    @PutMapping(path = "reservation/{id}/done")
-    public ApiResult<String> done(@PathVariable("id") int reservationId,
-                                  @SessionAttribute("user") User user) {
-
-        reservationService.doneReservation(reservationId);
-        return ApiResult.success();
     }
 
     @ExceptionHandler(AlreadyChangedException.class)

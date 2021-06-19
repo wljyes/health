@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping(path = "user")
 public class UserController {
 
     @Autowired
@@ -25,7 +24,7 @@ public class UserController {
     @Autowired
     AccountService accountService;
 
-    @PostMapping(path = "signUp")
+    @PostMapping(path = "user/signUp")
     public ApiResult<String> signUp(@Validated(BasicAccountInfo.class) UserBean userBean) {
         AccountBean accountBean = new AccountBean();
         accountBean.setUsername(userBean.getUsername());
@@ -37,7 +36,7 @@ public class UserController {
         return ApiResult.success();
     }
 
-    @PostMapping(path = "signIn")
+    @PostMapping(path = "user/signIn")
     public ApiResult<User> signIn(@Validated(BasicAccountInfo.class) UserBean userBean,
                 HttpSession session) {
         AccountBean accountBean = new AccountBean();
@@ -54,18 +53,18 @@ public class UserController {
         return ApiResult.success(user);
     }
 
-    @GetMapping(path = "getCurrentUser")
+    @GetMapping(path = "user/getCurrentUser")
     public ApiResult<User> getCurrentUser(@SessionAttribute(value = "user") User currentUser) {
         return ApiResult.success(currentUser);
     }
 
-    @GetMapping(path = "{id}")
+    @GetMapping(path = "users/{id}")
     public ApiResult<User> getUserById(@PathVariable("id") int id) {
         User user = userService.getUserById(id);
         return ApiResult.success(user);
     }
 
-    @PostMapping(path = "update")
+    @PostMapping(path = "user/update")
     public ApiResult<User> updateUser(@Validated(AdvanceProfileInfo.class) UserBean userBean,
                                         @SessionAttribute("user") User user) {
         userService.update(userBean, user);

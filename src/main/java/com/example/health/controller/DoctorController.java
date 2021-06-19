@@ -23,7 +23,7 @@ public class DoctorController {
     @Autowired
     AccountService accountService;
 
-    @PostMapping(path = "signUp")
+    @PostMapping(path = "doctor/signUp")
     public ApiResult<String> signUp(@Validated(BasicAccountInfo.class) DoctorBean doctorBean) {
         AccountBean accountBean = new AccountBean();
         accountBean.setUsername(doctorBean.getUsername());
@@ -35,7 +35,7 @@ public class DoctorController {
         return ApiResult.success();
     }
 
-    @PostMapping(path = "signIn")
+    @PostMapping(path = "doctor/signIn")
     public ApiResult<Doctor> signIn(@Validated(BasicAccountInfo.class) DoctorBean doctorBean,
                                     HttpSession session) {
         AccountBean accountBean = new AccountBean();
@@ -58,19 +58,19 @@ public class DoctorController {
         return ApiResult.success(doctor);
     }
 
-    @GetMapping(path = "doctor/{id}")
+    @GetMapping(path = "doctors/{id}")
     public ApiResult<Doctor> getDoctorById(@PathVariable("id") int id) {
         return ApiResult.success(doctorService.getDoctorById(id));
     }
 
-    @GetMapping(path = "department/{departmentId}/doctors")
+    @GetMapping(path = "departments/{departmentId}/doctors")
     public ApiResult<List<Doctor>> getDoctorsOfDepartment(
             @PathVariable("departmentId") int departmentId) {
         List<Doctor> doctors = doctorService.getAllDoctorsByDepartmentId(departmentId);
         return ApiResult.success(doctors);
     }
 
-    @PostMapping(path = "update")
+    @PostMapping(path = "doctor/update")
     public ApiResult<Doctor> updateDoctor(@Validated(AdvanceProfileInfo.class) DoctorBean doctorBean,
                                           @SessionAttribute("doctor") Doctor doctor) {
         doctorService.update(doctorBean, doctor);
