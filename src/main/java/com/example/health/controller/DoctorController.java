@@ -9,6 +9,7 @@ import com.example.health.entity.Doctor;
 import com.example.health.service.AccountService;
 import com.example.health.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,8 @@ public class DoctorController {
     AccountService accountService;
 
     @PostMapping(path = "doctor/signUp")
-    public ApiResult<String> signUp(@Validated(BasicAccountInfo.class) DoctorBean doctorBean) {
+    public String signUp(@Validated(BasicAccountInfo.class) DoctorBean doctorBean,
+                         Model model) {
         AccountBean accountBean = new AccountBean();
         accountBean.setUsername(doctorBean.getUsername());
         accountBean.setPassword(doctorBean.getPassword());
@@ -32,12 +34,14 @@ public class DoctorController {
 
         Account account = accountService.signUp(accountBean);
         doctorService.signUp(doctorBean, account);
-        return ApiResult.success();
+        model.addAttribute("doctorName", doctorBean.getUsername());
+        return "/doctor/login";
     }
 
     @PostMapping(path = "doctor/signIn")
-    public ApiResult<Doctor> signIn(@Validated(BasicAccountInfo.class) DoctorBean doctorBean,
-                                    HttpSession session) {
+    public String signIn(@Validated(BasicAccountInfo.class) DoctorBean doctorBean,
+                                    HttpSession session,
+                         Model model) {
         AccountBean accountBean = new AccountBean();
         accountBean.setUsername(doctorBean.getUsername());
         accountBean.setPassword(doctorBean.getPassword());
@@ -48,8 +52,8 @@ public class DoctorController {
 
         session.setAttribute("role", Role.Doctor.getCode());
         session.setAttribute("doctor", doctor);
-
-        return ApiResult.success(doctor);
+        model.addAttribute("doctor", doctor);
+        return "doctor/index";
     }
 
     @GetMapping(path = "doctor/getCurrentDoctor")
