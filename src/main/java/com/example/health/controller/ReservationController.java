@@ -12,6 +12,7 @@ import com.example.health.repository.DepartmentRepository;
 import com.example.health.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,9 +43,10 @@ public class ReservationController {
     }
 
     @GetMapping(path = "user/reservations")
-    public ApiResult<List<Reservation>> getAllReservationOfUser(@SessionAttribute("user") User user) {
+    public String getAllReservationOfUser(@SessionAttribute("user") User user, Model model) {
         List<Reservation> reservations = reservationService.getAllReservationByUserId(user.getId());
-        return ApiResult.success(reservations);
+        model.addAttribute("reservations", reservations);
+        return "user/reservations";
     }
 
     @GetMapping(path = "user/reservations/{status}")
