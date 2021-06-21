@@ -12,4 +12,9 @@ public class ResourceController {
     public String userSignUp() {
         return "/user/signUp";
     }
+
+    @GetMapping("user/login")
+    public String userLogin() {
+        return "/user/login";
+    }
 }
