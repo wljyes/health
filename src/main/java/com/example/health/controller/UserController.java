@@ -57,7 +57,7 @@ public class UserController {
 
         model.addAttribute("user", user);
 
-        return "redirect:user/index";
+        return "redirect:/view/user/index";
     }
 
     @GetMapping(path = "user/getCurrentUser")
