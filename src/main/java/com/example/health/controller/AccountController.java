@@ -46,7 +46,7 @@ public class AccountController {
 //    }
 
     @PostMapping(path = "changePassword")
-    ApiResult<String> changePassword(@Validated(ChangePasswordInfo.class) AccountBean accountBean,
+    public ApiResult<String> changePassword(@Validated(ChangePasswordInfo.class) AccountBean accountBean,
                                      HttpSession session) {
         if (session.getAttribute("role") == null) {
             throw new UnAuthException("Need login");

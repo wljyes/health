@@ -42,8 +42,8 @@ public class UserController {
     }
 
     @PostMapping(path = "user/signIn")
-    public ApiResult<User> signIn(@Validated(BasicAccountInfo.class) UserBean userBean,
-                HttpSession session) {
+    public String signIn(@Validated(BasicAccountInfo.class) UserBean userBean,
+                HttpSession session, Model model) {
         AccountBean accountBean = new AccountBean();
         accountBean.setUsername(userBean.getUsername());
         accountBean.setPassword(userBean.getPassword());
@@ -55,7 +55,9 @@ public class UserController {
         session.setAttribute("role", Role.User.getCode());
         session.setAttribute("user", user);
 
-        return ApiResult.success(user);
+        model.addAttribute("user", user);
+
+        return "user/index";
     }
 
     @GetMapping(path = "user/getCurrentUser")
@@ -70,10 +72,12 @@ public class UserController {
     }
 
     @PostMapping(path = "user/update")
-    public ApiResult<User> updateUser(@Validated(AdvanceProfileInfo.class) UserBean userBean,
-                                        @SessionAttribute("user") User user) {
+    public String updateUser(@Validated(AdvanceProfileInfo.class) UserBean userBean,
+                                        @SessionAttribute("user") User user,
+                             Model model) {
         userService.update(userBean, user);
-        return ApiResult.success(user);
+        model.addAttribute("user", user);
+        return "user/profile";
     }
 
 //    @ExceptionHandler(HttpSessionRequiredException.class)
