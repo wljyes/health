@@ -27,7 +27,7 @@ public class UserController {
     @Autowired
     AccountService accountService;
 
-    @PostMapping(path = "user/signUp")
+    @PostMapping(path = "/user/signUp")
     @Transactional
     public String signUp(@Validated(BasicAccountInfo.class) UserBean userBean, Model model) {
         AccountBean accountBean = new AccountBean();
