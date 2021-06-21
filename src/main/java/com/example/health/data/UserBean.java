@@ -37,9 +37,6 @@ public class UserBean {
     @Size(min = 4, max = 16, groups = ChangePasswordInfo.class)
     String newPassword;
 
-    @NotNull(groups = BasicAccountInfo.class)
-    int role;
-
 
     public void fillUser(User user) {
         user.setName(name);

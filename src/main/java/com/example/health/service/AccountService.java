@@ -70,7 +70,7 @@ public class AccountService {
         if (account == null) {
             throw new AccountException("用户不存在!");
         }
-        if (validatePassword(accountBean.getPassword(), account.getSalt(),
+        if (!validatePassword(accountBean.getPassword(), account.getSalt(),
                 account.getPasswordHash())) {
             throw new AccountException("密码错误!");
         }

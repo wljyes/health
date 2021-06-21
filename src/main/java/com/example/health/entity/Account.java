@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class Account {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
   @Column(length = 20)

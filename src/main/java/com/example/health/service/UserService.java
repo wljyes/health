@@ -23,6 +23,7 @@ public class UserService {
     public void signUp(UserBean userBean, Account account) {
         User user = new User();
         userBean.fillUser(user);
+        user.setName(userBean.getUsername());
         user.setAccountId(account.getId());
         userRepository.save(user);
     }

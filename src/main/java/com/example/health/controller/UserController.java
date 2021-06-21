@@ -11,12 +11,15 @@ import com.example.health.entity.User;
 import com.example.health.service.AccountService;
 import com.example.health.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
-@RestController
+@Controller
 public class UserController {
 
     @Autowired
@@ -25,7 +28,8 @@ public class UserController {
     AccountService accountService;
 
     @PostMapping(path = "user/signUp")
-    public ApiResult<String> signUp(@Validated(BasicAccountInfo.class) UserBean userBean) {
+    @Transactional
+    public String signUp(@Validated(BasicAccountInfo.class) UserBean userBean, Model model) {
         AccountBean accountBean = new AccountBean();
         accountBean.setUsername(userBean.getUsername());
         accountBean.setPassword(userBean.getPassword());
@@ -33,7 +37,8 @@ public class UserController {
 
         Account account = accountService.signUp(accountBean);
         userService.signUp(userBean, account);
-        return ApiResult.success();
+        model.addAttribute("username", userBean.getUsername());
+        return "user/login";
     }
 
     @PostMapping(path = "user/signIn")

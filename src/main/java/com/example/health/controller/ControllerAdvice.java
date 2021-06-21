@@ -22,19 +22,20 @@ public class ControllerAdvice {
     @ExceptionHandler(UnAuthException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
-    ApiResult<String> handleUnAuthError(Exception ex) {
-        return ApiResult.fail(ex.getLocalizedMessage());
+    public ApiResult<String> handleUnAuthError(UnAuthException ex) {
+        return ApiResult.fail(ex.getMessage());
     }
 
     @ExceptionHandler(AccountException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    ApiResult<String> handleError(Exception ex) {
-        return ApiResult.fail(ex.getLocalizedMessage());
+    public ApiResult<String> handleError(AccountException ex) {
+        return ApiResult.fail(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
     public ApiResult<String> handleAllException(Exception ex) {
         return ApiResult.fail(ex.getMessage());
     }
