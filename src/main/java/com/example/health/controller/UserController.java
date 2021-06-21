@@ -61,8 +61,9 @@ public class UserController {
     }
 
     @GetMapping(path = "user/getCurrentUser")
-    public ApiResult<User> getCurrentUser(@SessionAttribute(value = "user") User currentUser) {
-        return ApiResult.success(currentUser);
+    public String getCurrentUser(@SessionAttribute(value = "user") User currentUser, Model model) {
+        model.addAttribute("user", currentUser);
+        return "user/profile";
     }
 
     @GetMapping(path = "users/{id}")
