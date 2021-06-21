@@ -57,15 +57,16 @@ public class ReservationController {
     }
 
     @PostMapping(path = "reservations/create")
-    public ApiResult<Reservation> create(@Validated ReservationBean reservationBean,
-                                         @SessionAttribute("user") User user) {
+    public String create(@Validated ReservationBean reservationBean,
+                                         @SessionAttribute("user") User user,
+                         Model model) {
         Department department = departmentRepository.getById(reservationBean.getDepartmentId());
         if (reservationService.getReservationCount(reservationBean) >= department.getLimitPerPeriod()) {
             throw new UnableReserveException("预约达到上限");
         }
 
         Reservation reservation = reservationService.createReservation(reservationBean, user);
-        return ApiResult.success(reservation);
+        return "redirect:user/reservations";
     }
 
     @PutMapping(path = "reservations/{id}/cancel")

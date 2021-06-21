@@ -17,4 +17,14 @@ public class ResourceController {
     public String userLogin() {
         return "/user/login";
     }
+
+    @GetMapping("user/index")
+    public String userIndex() {
+        return "/user/index";
+    }
+
+    @GetMapping("user/reservations")
+    public String userReservations() {
+        return "/user/reservations";
+    }
 }
